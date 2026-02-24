@@ -3,7 +3,7 @@
 ## Setup Guide
 
 1. Install git (if not already installed).
- <b>In your IDE's terminal: </b>
+ In your IDE's terminal:
 2. `git clone https://github.com/OmarAhmedTHE25th/Algorithms-Project`
 3. `cd Algorithms-Project`
 4. `git config --global user.name "Your Name"` (Github name)
