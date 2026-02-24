@@ -2,7 +2,7 @@
 
 ## Setup Guide
 
-1. Install git (if not already installed).
+1. Install git (if not already installed)  
  In your IDE's terminal:
 2. `git clone https://github.com/OmarAhmedTHE25th/Algorithms-Project`
 3. `cd Algorithms-Project`
