@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 #include "Job.hpp"
 #include "globals.cpp"
 
@@ -20,12 +19,14 @@ struct Result {
     std::vector<Job> bestOrder;
     int totalPenalty;
 };
-void optimizeJobScheduling(const std::vector<Job>& jobs,
+Result optimizeJobScheduling(const std::vector<Job>& jobs,
                std::vector<Job>& current,
                std::vector<bool>& used)
                {
+                   vector<Job> bestOrder;
                 if (current.size()== jobs.size())
                 {
+                    int minPenalty = INT_MAX;
                     int time = 0;
                     int totalPenalty = 0;
                     for(auto& job : jobs)
@@ -41,7 +42,7 @@ void optimizeJobScheduling(const std::vector<Job>& jobs,
                            minPenalty = totalPenalty;
                            bestOrder = jobs;
                         }
-                        return;
+                        return {bestOrder,minPenalty};
                 }
                 for (size_t i = 0; i < jobs.size(); i++)
                 { 
@@ -55,12 +56,13 @@ void optimizeJobScheduling(const std::vector<Job>& jobs,
                     }
                     
                 }
-                
-                
+
+
+                   return {};
                }
 
 
-    int main()
+    int BF_main()
     {
         //----------------------------Brute Force--------------------------------------
         vector<Job> jobs = {
@@ -70,11 +72,12 @@ void optimizeJobScheduling(const std::vector<Job>& jobs,
         };
          std::vector<Job> current;
     std::vector<bool> used(jobs.size(), false);
-        optimizeJobScheduling(jobs,current,used);
-        for(auto job : bestOrder)
+        const auto result = optimizeJobScheduling(jobs,current,used);
+        for(const auto job : result.bestOrder)
         {
             cout << "Job " << job.id << " (Penalty: " << job.penalty << ")\n";
         
         }
-        std::cout << "Total penalty: " << minPenalty << "\n";
+        std::cout << "Total penalty: " << result.totalPenalty << "\n";
+        return 0;
     }
