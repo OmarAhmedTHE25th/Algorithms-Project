@@ -32,6 +32,8 @@
 *.app
 
 # IDE Specific (Visual Studio, JetBrains, etc.)
+.vscode
+.idea
 .vs/
 out/
 build/
