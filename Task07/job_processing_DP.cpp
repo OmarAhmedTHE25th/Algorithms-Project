@@ -14,7 +14,7 @@ void optimizeJobScheduling(vector<Job>& jobs)
     const size_t size = jobs.size();
     int total_time=0;
     for(const auto j: jobs)total_time+=j.time;
-    vector<vector<int>> dp{size + 1, vector<int>(total_time + 1, 0)};
+    vector dp{size + 1, vector<int>(total_time + 1, 0)};
     for (int i = 1; i <= size; ++i) {
         const int p_i = jobs[i-1].penalty;
         const int t_i = jobs[i-1].time;
