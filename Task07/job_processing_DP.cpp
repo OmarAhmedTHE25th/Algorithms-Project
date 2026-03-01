@@ -56,10 +56,10 @@ void optimizeJobScheduling(vector<Job>& jobs)
 
 int main() {
     vector<Job> jobs = {
-        {1,4,5,10},
-        {2,2,6,20},
-        {3,1,6,30},
-        {4,3,1,5}
+        {1,40,5,25},
+        {2,2,6,2},
+        {3,10,6,30},
+        {4,7,12,80}
     };
     optimizeJobScheduling(jobs);
     cout << "--- Scheduling Result ---" << endl;
@@ -72,7 +72,7 @@ int main() {
     cout << endl;
 
     cout << "Full Execution Order: ";
-    for(int id : onTimeJobs) cout << id << " ";
-    for(int id : lateJobs) cout << id << " ";
+    for(const int id : onTimeJobs) cout << id << " ";
+    for(const int id : lateJobs) cout << id << " ";
     cout << endl;
 }

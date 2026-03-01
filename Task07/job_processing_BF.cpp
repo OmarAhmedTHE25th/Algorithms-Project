@@ -38,7 +38,7 @@ void BFHelper(const std::vector<Job>& jobs,
                              std::vector<bool>& used,
                              Result& best){
     if (current.size()== jobs.size()) {
-        if (const int totalPenalty = calculatePenalty(jobs); totalPenalty < best.totalPenalty)
+        if (const int totalPenalty = calculatePenalty(current); totalPenalty < best.totalPenalty)
         {
             best.totalPenalty = totalPenalty;
             best.bestOrder = current;
@@ -76,8 +76,20 @@ Result optimizeJobScheduling(const vector<Job>& jobs) {
         for(const auto job : bestOrder)
         {
             cout << "Job " << job.id << " (Penalty: " << job.penalty << ")\n";
-        
+
         }
         std::cout << "Total penalty: " << totalPenalty << "\n";
-        return 0;
+    vector<Job> jobs2 = {
+        {1,8,2,17},
+        {2,11,1,19},
+        {3,3,1,80},
+        {4,12,3,51}
+    };
+    const auto [bestOrder2, totalPenalty2] = optimizeJobScheduling(jobs2);
+    for(const auto job : bestOrder2)
+    {
+        cout << "Job " << job.id << " (Penalty: " << job.penalty << ")\n";
+
+    }
+    std::cout << "Total penalty: " << totalPenalty2 << "\n";        return 0;
     }
