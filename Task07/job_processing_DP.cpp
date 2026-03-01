@@ -56,10 +56,10 @@ void optimizeJobScheduling(vector<Job>& jobs)
 
 int main() {
     vector<Job> jobs = {
-        {1,40,5,25},
-        {2,2,6,2},
-        {3,10,6,30},
-        {4,7,12,80}
+        {1,18,7,25},
+        {2,5,9,20},
+        {3,14,6,45},
+        {4,9,11,70},
     };
     optimizeJobScheduling(jobs);
     cout << "--- Scheduling Result ---" << endl;

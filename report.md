@@ -150,22 +150,22 @@ void BFHelper(const std::vector<Job>& jobs,
 
 #### Test Cases
 ##### Test Case 1: 
-**Input:**
+**Input:**  
 ![img.png](Task07/img.png)  
 **Output:**  
 ![img_4.png](Task07/img_4.png)
 ##### Test Case 2:
-**Input:**
+**Input:**  
 ![img_2.png](Task07/img_2.png)  
 **Output:**  
 ![img_3.png](Task07/img_3.png)
 ##### Test Case 3:
-**Input:**
+**Input:**  
 ![img_6.png](Task07/img_6.png)  
-**Output:**  
+**Output:**   
 ![img_5.png](Task07/img_5.png)
 ##### Test Case 4:
-**Input:**
+**Input:**  
 ![img_8.png](Task07/img_8.png)  
 **Output:**  
 ![img_7.png](Task07/img_7.png)
@@ -230,12 +230,26 @@ void optimizeJobScheduling(vector<Job>& jobs)
 - **Space Complexity:** $O(n \cdot \sum t_i)$ to store the DP table.
 
 #### Test Cases
-**Input:**
-Jobs: {1, t=4, d=5, p=10}, {2, t=2, d=6, p=20}, {3, t=1, d=6, p=30}, {4, t=3, d=1, p=5}
-**Output:**
-Total Penalty: 5
-On-Time Sequence: 1 3 2
-Late Jobs: 4
+##### Test Case 1  
+**Input:**   
+![image_0.png](Task07/image_0.png)   
+**Output:**  
+![image_1.png](Task07/image_1.png)
+##### Test Case 2
+**Input:**  
+![image_2.png](Task07/image_2.png)  
+**Output:**  
+![image_3.png](Task07/image_3.png)
+##### Test Case 3
+**Input:**  
+![image_6.png](Task07/image_6.png)  
+**Output:**  
+![image_5.png](Task07/image_5.png)
+##### Test Case 4
+**Input:**  
+![image_4.png](Task07/image_4.png)  
+**Output:**  
+![image_7.png](Task07/image_7.png)
 
 ### Divide & Conquer Method
 This problem is solved using a recursive backtracking approach (a form of state-space search) that divides the problem into subproblems: for each job, we either process it on-time or we process it late.
@@ -298,9 +312,26 @@ static void DCHelper( vector<Job>& jobs,
 - **Space Complexity:** $O(n)$ for the recursion stack.
 
 #### Test Cases
-**Input:** Same as a DP test case.
-**Output:** Total Penalty: 5, Best Order: Job 1, Job 3, Job 2, Job 4
-
+##### Test Case 1
+**Input:**   
+![image_8.png](Task07/image_8.png)  
+**Output:**  
+![image_9.png](Task07/image_9.png)  
+##### Test Case 2
+**Input:**  
+![image_10.png](Task07/image_10.png)  
+**Output:**  
+![image_11.png](Task07/image_11.png)
+##### Test Case 3
+**Input:**  
+![image_12.png](Task07/image_12.png)  
+**Output:**  
+![image_13.png](Task07/image_13.png)
+##### Test Case 4  
+**Input:**  
+![image_14.png](Task07/image_14.png)  
+**Output:**  
+![image_15.png](Task07/image_15.png)
 ## Comparative Evaluation
 | Feature        | Brute Force                | Dynamic Programming          | Divide & Conquer (Backtracking) |
 |:---------------|:---------------------------|:-----------------------------|:--------------------------------|

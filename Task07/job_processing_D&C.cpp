@@ -72,10 +72,10 @@ Result optimizeJobScheduling(vector<Job> jobs) {
 
 int main() {
     vector<Job> jobs = {
-        {1,40,5,25},
-        {2,2,6,2},
-        {3,10,6,30},
-        {4,7,12,80}
+        {1,22,6,32},
+        {2,7,8,20},
+        {3,17,9,48},
+        {4,10,12,75}
     };
     Result r = optimizeJobScheduling(jobs);
 
