@@ -151,24 +151,24 @@ void BFHelper(const std::vector<Job>& jobs,
 #### Test Cases
 ##### Test Case 1: 
 **Input:**
-![img.png](img.png)  
+![img.png](Task07/img.png)  
 **Output:**  
-![img_4.png](img_4.png)
+![img_4.png](Task07/img_4.png)
 ##### Test Case 2:
 **Input:**
-![img_2.png](img_2.png)  
+![img_2.png](Task07/img_2.png)  
 **Output:**  
-![img_3.png](img_3.png)
+![img_3.png](Task07/img_3.png)
 ##### Test Case 3:
 **Input:**
-![img_6.png](img_6.png)  
+![img_6.png](Task07/img_6.png)  
 **Output:**  
-![img_5.png](img_5.png)
+![img_5.png](Task07/img_5.png)
 ##### Test Case 4:
 **Input:**
-![img_8.png](img_8.png)  
+![img_8.png](Task07/img_8.png)  
 **Output:**  
-![img_7.png](img_7.png)
+![img_7.png](Task07/img_7.png)
 ### Dynamic Programming Method
 We first sort the jobs by their deadlines (Earliest Deadline First – EDF). We define $dp[i][t]$ as the minimum penalty incurred when considering the first $i$ jobs, and they finish by time $t$.
 
