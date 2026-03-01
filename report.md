@@ -15,48 +15,42 @@
 - **Course Code:** CSE245
 - **Academic Year:** 2025 / 2026
 - **Semester:** _spring 2026_
-- **Instructor:** _Contacts
-  Lecturer: _Prof. Dr. Gamal A. Ebrahim / Eng. Sally E. Shaker_
+- **Instructors:** _Prof. Dr. Gamal A. Ebrahim / Eng. Sally E. Shaker_
 ---
 
 ## **Group Members**
 
-| Name | Student ID |
-|------|------------|
-|      |            |
-|      |            |
-|      |            |
-|      |            |
-|      |            |
-|      |            |
-|      |            |
-|      |            |
-|      |            |
-|      |            |
+| Name | Student ID | Name | Student ID |
+|------|------------|------|------------|
+|      |            |      |            |
+|      |            |      |            |
+|      |            |      |            |
+|      |            |      |            |
+|      |            |      |            |
 
 ---
 
 ## **Submission Date**
 _(Insert date)_  
-\newpage
+
 # Task01 – _(Insert Description)_
 
-\newpage
+
 # Task02 – _(Insert Description)_
 
-\newpage
+
 # Task03 – _(Insert Description)_
 
-\newpage
+
 # Task04 – _(Insert Description)_
 
-\newpage
+
 # Task05 – _(Insert Description)_
 
-\newpage
+
 # Task06 – _(Insert Description)_
 
-\newpage
+
 # Task07 – _Minimizing Penalty in Single-Machine Job Scheduling_
 ## Task Description
 A company must schedule $n$ jobs on a single machine. Each job $i$ has:
@@ -148,27 +142,48 @@ void BFHelper(const std::vector<Job>& jobs,
 - **Time Complexity:** $O(n \cdot n!)$, where $n!$ is the number of permutations and $O(n)$ is the time to calculate the penalty for each.
 - **Space Complexity:** $O(n)$ for the recursion stack and storing the current permutation.
 
-#### Test Cases
-##### Test Case 1: 
-**Input:**  
-![img.png](Task07/img.png)  
-**Output:**  
-![img_4.png](Task07/img_4.png)
-##### Test Case 2:
-**Input:**  
-![img_2.png](Task07/img_2.png)  
-**Output:**  
-![img_3.png](Task07/img_3.png)
-##### Test Case 3:
-**Input:**  
-![img_6.png](Task07/img_6.png)  
-**Output:**   
-![img_5.png](Task07/img_5.png)
-##### Test Case 4:
-**Input:**  
-![img_8.png](Task07/img_8.png)  
-**Output:**  
-![img_7.png](Task07/img_7.png)
+
+#### Test Cases <br> 
+
+##### Test Case 1: <br>  
+
+**Input:** <br> 
+
+![img.png](Task07/TestCaseImages/img.png) <br> 
+
+**Output:** <br> 
+
+![img_4.png](Task07/TestCaseImages/img_4.png) <br> 
+
+##### Test Case 2: <br> 
+
+**Input:** <br> 
+
+![img_2.png](Task07/TestCaseImages/img_2.png) <br>   
+
+**Output:** <br> 
+
+![img_3.png](Task07/TestCaseImages/img_3.png) <br> 
+
+##### Test Case 3: <br>
+
+**Input:** <br> 
+
+![img_6.png](Task07/TestCaseImages/img_6.png) <br> 
+
+**Output:** <br>  
+
+![img_5.png](Task07/TestCaseImages/img_5.png) <br> 
+
+##### Test Case 4: <br> 
+
+**Input:** <br>   
+
+![img_8.png](Task07/TestCaseImages/img_8.png) <br>   
+
+**Output:** <br>   
+
+![img_7.png](Task07/TestCaseImages/img_7.png) <br> 
 ### Dynamic Programming Method
 We first sort the jobs by their deadlines (Earliest Deadline First – EDF). We define $dp[i][t]$ as the minimum penalty incurred when considering the first $i$ jobs, and they finish by time $t$.
 
@@ -229,27 +244,47 @@ void optimizeJobScheduling(vector<Job>& jobs)
 - **Time Complexity:** $O(n \cdot \sum t_i)$, where $n$ is the number of jobs and $\sum t_i$ is the total processing time.
 - **Space Complexity:** $O(n \cdot \sum t_i)$ to store the DP table.
 
-#### Test Cases
-##### Test Case 1  
-**Input:**   
-![image_0.png](Task07/image_0.png)   
-**Output:**  
-![image_1.png](Task07/image_1.png)
-##### Test Case 2
-**Input:**  
-![image_2.png](Task07/image_2.png)  
-**Output:**  
-![image_3.png](Task07/image_3.png)
-##### Test Case 3
-**Input:**  
-![image_6.png](Task07/image_6.png)  
-**Output:**  
-![image_5.png](Task07/image_5.png)
-##### Test Case 4
-**Input:**  
-![image_4.png](Task07/image_4.png)  
-**Output:**  
-![image_7.png](Task07/image_7.png)
+#### Test Cases <br> 
+
+##### Test Case 1 <br>    
+
+**Input:** <br>   
+
+![image_0.png](Task07/TestCaseImages/image_0.png) <br>  
+
+**Output:** <br>     
+
+![image_1.png](Task07/TestCaseImages/image_1.png) <br>
+
+##### Test Case 2 <br> 
+
+**Input:** <br>   
+
+![image_2.png](Task07/TestCaseImages/image_2.png) <br>   
+
+**Output:** <br>   
+
+![image_3.png](Task07/TestCaseImages/image_3.png) <br>   
+
+##### Test Case 3 <br>   
+
+**Input:** <br>   
+
+![image_6.png](Task07/TestCaseImages/image_6.png) <br>   
+
+**Output:** <br>   
+
+![image_5.png](Task07/TestCaseImages/image_5.png) <br>   
+
+##### Test Case 4 <br>   
+
+**Input:** <br>    
+
+![image_4.png](Task07/TestCaseImages/image_4.png) <br>    
+
+**Output:** <br>   
+
+![image_7.png](Task07/TestCaseImages/image_7.png) <br> 
 
 ### Divide & Conquer Method
 This problem is solved using a recursive backtracking approach (a form of state-space search) that divides the problem into subproblems: for each job, we either process it on-time or we process it late.
@@ -311,27 +346,47 @@ static void DCHelper( vector<Job>& jobs,
 - **Time Complexity:** $O(2^n)$ in the worst case (unpruned binary tree).
 - **Space Complexity:** $O(n)$ for the recursion stack.
 
-#### Test Cases
-##### Test Case 1
-**Input:**   
-![image_8.png](Task07/image_8.png)  
-**Output:**  
-![image_9.png](Task07/image_9.png)  
-##### Test Case 2
-**Input:**  
-![image_10.png](Task07/image_10.png)  
-**Output:**  
-![image_11.png](Task07/image_11.png)
-##### Test Case 3
-**Input:**  
-![image_12.png](Task07/image_12.png)  
-**Output:**  
-![image_13.png](Task07/image_13.png)
-##### Test Case 4  
-**Input:**  
-![image_14.png](Task07/image_14.png)  
-**Output:**  
-![image_15.png](Task07/image_15.png)
+#### Test Cases <br> 
+
+##### Test Case 1 <br> 
+
+**Input:** <br>  
+
+![image_8.png](Task07/TestCaseImages/image_8.png) <br> 
+
+**Output:** <br> 
+
+![image_9.png](Task07/TestCaseImages/image_9.png) <br>   
+
+##### Test Case 2 <br> 
+
+**Input:** <br> 
+
+![image_10.png](Task07/TestCaseImages/image_10.png) <br> 
+
+**Output:** <br> 
+
+![image_11.png](Task07/TestCaseImages/image_11.png) <br> 
+
+##### Test Case 3 <br> 
+
+**Input:** <br> 
+
+![image_12.png](Task07/TestCaseImages/image_12.png) <br> 
+
+**Output:** <br> 
+
+![image_13.png](Task07/TestCaseImages/image_13.png) <br> 
+
+##### Test Case 4 <br>  
+
+**Input:** <br> 
+
+![image_14.png](Task07/TestCaseImages/image_14.png) <br> 
+
+**Output:** <br> 
+
+![image_15.png](Task07/TestCaseImages/image_15.png) <br> 
 ## Comparative Evaluation
 | Feature        | Brute Force                | Dynamic Programming          | Divide & Conquer (Backtracking) |
 |:---------------|:---------------------------|:-----------------------------|:--------------------------------|
@@ -349,14 +404,14 @@ static void DCHelper( vector<Job>& jobs,
 1. **EDF Sorting:** Sorting jobs by their deadlines is a crucial preprocessing step for both DP and recursive approaches in this problem.
 2. **Penalty vs. Time:** The DP approach's efficiency is highly dependent on the total processing time, making it a "pseudo-polynomial" time algorithm.
 3. **Pruning Effectiveness:** In the Divide & Conquer (Backtracking) approach, effective pruning can drastically reduce the search space, making it viable for larger $n$ than pure brute force.
-\newpage
+
 # Task08 – _(Insert Description)_
 
-\newpage
+
 # Task09 – _(Insert Description)_
 
-\newpage
+
 # Task10 – _(Insert Description)_
-\newpage
+
 # References
 [1] Moore, J. M. (1968). An n job, one machine sequencing algorithm for minimizing the number of late jobs. Management Science.
