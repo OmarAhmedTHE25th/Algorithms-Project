@@ -36,7 +36,7 @@ struct DCState {
  * @param i Index of the current job being considered.
  * @param currentTime Cumulative processing time of jobs selected to be on time.
  * @param savedPenalty Sum of penalties of jobs selected to be on time.
- * @param on_time Current decisions for jobs (1 for on time, 0 for late).
+ * @param on_time_flags Current decisions for jobs (1 for on time, 0 for late).
  * @param remainingPenaltySum Sum of penalties of jobs from index i to the end.
  * @param state Shared state to store the best results.
  */
@@ -44,7 +44,7 @@ static void DCHelper(vector<Job>& jobs,
     const int i,
     const int currentTime,
     const int savedPenalty,
-    vector<char>& on_time,
+    vector<char>& on_time_flags,
     const int remainingPenaltySum,
     DCState& state) {
     
@@ -55,7 +55,7 @@ static void DCHelper(vector<Job>& jobs,
     if (i == static_cast<int>(jobs.size())) {
         if (savedPenalty > state.bestSavedPenalty) {
             state.bestSavedPenalty = savedPenalty;
-            state.best_on_time = on_time;
+            state.best_on_time = on_time_flags;
         }
         return;
     }
@@ -63,22 +63,22 @@ static void DCHelper(vector<Job>& jobs,
     const int penalty_sum = remainingPenaltySum - jobs[i].penalty;
 
     // Option 1: Mark job i as late (skip completing it by its deadline)
-    on_time[i] = 0;
-    DCHelper(jobs, i + 1, currentTime, savedPenalty, on_time, penalty_sum, state);
+    on_time_flags[i] = 0;
+    DCHelper(jobs, i + 1, currentTime, savedPenalty, on_time_flags, penalty_sum, state);
 
     // Option 2: Try to complete job i on time if the deadline allows
     if (currentTime + jobs[i].time <= jobs[i].deadline) {
-        on_time[i] = 1;
+        on_time_flags[i] = 1;
         DCHelper(jobs,
             i + 1,
             currentTime + jobs[i].time,
             savedPenalty + jobs[i].penalty,
-            on_time,
+            on_time_flags,
             penalty_sum,
             state);
         
         // Backtrack
-        on_time[i] = 0;
+        on_time_flags[i] = 0;
     }
 }
 
@@ -124,11 +124,11 @@ int main() {
         {3,17,9,48},
         {4,10,12,75}
     };
-    Result r = optimizeJobScheduling(jobs);
+    auto [bestOrder, totalPenalty] = optimizeJobScheduling(jobs);
 
-    for (const auto& job : r.bestOrder) {
+    for (const auto& job : bestOrder) {
         std::cout << "Job " << job.id << " (Penalty: " << job.penalty << ")\n";
     }
-    std::cout << "Total penalty: " << r.totalPenalty << "\n";
+    std::cout << "Total penalty: " << totalPenalty << "\n";
     return 0;
 }
