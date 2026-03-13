@@ -27,7 +27,7 @@ struct Result {
 // Internal state to track the best solution found during recursion
 struct DCState {
     int bestSavedPenalty = -1; // Maximum penalty sum of jobs completed on time
-    vector<char> bestTake;      // 1 if job i is on time, 0 otherwise
+    vector<char> best_on_time;      // 1 if job i is on time, 0 otherwise
 };
 
 /**
@@ -36,7 +36,7 @@ struct DCState {
  * @param i Index of the current job being considered.
  * @param currentTime Cumulative processing time of jobs selected to be on time.
  * @param savedPenalty Sum of penalties of jobs selected to be on time.
- * @param currentTake Current decisions for jobs (1 for on time, 0 for late).
+ * @param on_time Current decisions for jobs (1 for on time, 0 for late).
  * @param remainingPenaltySum Sum of penalties of jobs from index i to the end.
  * @param state Shared state to store the best results.
  */
@@ -44,7 +44,7 @@ static void DCHelper(vector<Job>& jobs,
     const int i,
     const int currentTime,
     const int savedPenalty,
-    vector<char>& currentTake,
+    vector<char>& on_time,
     const int remainingPenaltySum,
     DCState& state) {
     
@@ -55,7 +55,7 @@ static void DCHelper(vector<Job>& jobs,
     if (i == static_cast<int>(jobs.size())) {
         if (savedPenalty > state.bestSavedPenalty) {
             state.bestSavedPenalty = savedPenalty;
-            state.bestTake = currentTake;
+            state.best_on_time = on_time;
         }
         return;
     }
@@ -63,22 +63,22 @@ static void DCHelper(vector<Job>& jobs,
     const int penalty_sum = remainingPenaltySum - jobs[i].penalty;
 
     // Option 1: Mark job i as late (skip completing it by its deadline)
-    currentTake[i] = 0;
-    DCHelper(jobs, i + 1, currentTime, savedPenalty, currentTake, penalty_sum, state);
+    on_time[i] = 0;
+    DCHelper(jobs, i + 1, currentTime, savedPenalty, on_time, penalty_sum, state);
 
     // Option 2: Try to complete job i on time if the deadline allows
     if (currentTime + jobs[i].time <= jobs[i].deadline) {
-        currentTake[i] = 1;
+        on_time[i] = 1;
         DCHelper(jobs,
             i + 1,
             currentTime + jobs[i].time,
             savedPenalty + jobs[i].penalty,
-            currentTake,
+            on_time,
             penalty_sum,
             state);
         
         // Backtrack
-        currentTake[i] = 0;
+        on_time[i] = 0;
     }
 }
 
@@ -93,7 +93,7 @@ Result optimizeJobScheduling(vector<Job> jobs) {
     for (const auto& j : jobs) totalPenaltyAll += j.penalty;
 
     DCState state;
-    state.bestTake.assign(jobs.size(), 0);
+    state.best_on_time.assign(jobs.size(), 0);
     vector<char> currentTake(jobs.size(), 0);
 
     // Start recursion
@@ -105,7 +105,7 @@ Result optimizeJobScheduling(vector<Job> jobs) {
     late.reserve(jobs.size());
 
     for (size_t i = 0; i < jobs.size(); ++i) {
-        if (state.bestTake[i]) onTime.push_back(jobs[i]);
+        if (state.best_on_time[i]) onTime.push_back(jobs[i]);
         else late.push_back(jobs[i]);
     }
 
@@ -118,7 +118,7 @@ Result optimizeJobScheduling(vector<Job> jobs) {
 }
 
 int main() {
-    vector<Job> jobs = {
+    const vector<Job> jobs = {
         {1,22,6,32},
         {2,7,8,20},
         {3,17,9,48},
