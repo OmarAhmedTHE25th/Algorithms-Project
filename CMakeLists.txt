@@ -7,9 +7,19 @@ include_directories(Task01)
 include_directories(Task07)
 
 add_executable(
-        task1_template
+        task1_cli
         Task01/main.cpp
- "Task10/main.cpp")
+        Task01/Board.hpp
+        Task01/constants.c
+)
+ 
+if (WIN32)
+    add_executable(task1_gui WIN32
+             Task01/gui_main.cpp
+             Task01/Board.hpp
+             Task01/constants.c
+    )
+endif()
 
 add_executable(task7_DP
         Task07/Job.hpp
