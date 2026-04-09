@@ -15,9 +15,9 @@ add_executable(
  
 if (WIN32)
     add_executable(task1_gui WIN32
-             Task01/gui_main.cpp
-             Task01/Board.hpp
-             Task01/constants.c
+            Task01/gui_main.cpp
+            Task01/Board.hpp
+            Task01/constants.c
     )
 endif()
 
@@ -28,4 +28,11 @@ add_executable(
         task7_BF
         Task07/Job.hpp
         Task07/job_processing_BF.cpp
- "Task10/main.cpp")
+        "Task10/main.cpp")
+
+if (WIN32)
+    add_executable(task7_gui WIN32
+            Task07/gui_main.cpp
+            Task07/Job.hpp
+    )
+endif()
