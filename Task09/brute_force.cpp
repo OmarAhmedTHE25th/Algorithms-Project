@@ -3,15 +3,12 @@
 #include <vector>
 using namespace std;
 
-// ── helpers ──────────────────────────────────────────────────────────────────
 
-// Squared Euclidean distance (used by main.cpp as well via clustering_common)
 double distanceSquared(const Point& a, const Point& b) {
     double dx = a.x - b.x, dy = a.y - b.y;
     return dx * dx + dy * dy;
 }
 
-// Centroid of cluster c given current assignments
 static Point centroid(const vector<Point>& pts, const vector<int>& asgn, int c) {
     double sx = 0, sy = 0;
     int cnt = 0;
@@ -22,7 +19,6 @@ static Point centroid(const vector<Point>& pts, const vector<int>& asgn, int c) 
     return {sx / cnt, sy / cnt};
 }
 
-// Check that every cluster 0..k-1 has at least one point
 static bool allNonEmpty(const vector<int>& asgn, int k) {
     vector<int> cnt(k, 0);
     for (int x : asgn) cnt[x]++;
@@ -30,7 +26,6 @@ static bool allNonEmpty(const vector<int>& asgn, int k) {
     return true;
 }
 
-// Total within-cluster sum of squared distances to centroid
 static double totalCost(const vector<Point>& pts, const vector<int>& asgn, int k) {
     if (!allNonEmpty(asgn, k)) return 1e18;
     vector<Point> centers(k);
@@ -41,7 +36,6 @@ static double totalCost(const vector<Point>& pts, const vector<int>& asgn, int k
     return cost;
 }
 
-// ── recursive DFS over all k^n assignments ───────────────────────────────────
 static void dfs(const vector<Point>& pts, int k, int idx,
                 vector<int>& cur, ClusterResult& best) {
     if (idx == (int)pts.size()) {
@@ -55,7 +49,6 @@ static void dfs(const vector<Point>& pts, int k, int idx,
     }
 }
 
-// ── public API ────────────────────────────────────────────────────────────────
 ClusterResult solveBruteForce(const vector<Point>& points, int k) {
     ClusterResult res;
     res.assignment = vector<int>(points.size(), -1);

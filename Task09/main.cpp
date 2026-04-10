@@ -24,7 +24,7 @@ void printResult(const string& title, const ClusterResult& result, int k) {
 int main() {
     int n, k;
     cout << "========================================\n";
-    cout << "  Task 9 - K-Clustering (CSE245 S2026)\n";
+    cout << "  Task 9 - K-Clustering  \n";
     cout << "========================================\n";
     cout << "Enter number of points: ";
     cin >> n;

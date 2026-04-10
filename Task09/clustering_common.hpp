@@ -9,7 +9,6 @@ struct ClusterResult {
     double cost;
 };
 
-// Returns squared Euclidean distance between two points
 double distanceSquared(const Point& a, const Point& b);
 
 #endif
