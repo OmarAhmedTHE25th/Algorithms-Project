@@ -12,7 +12,7 @@
  * to complete it on time or late. 
  * 'savedPenalty' is the sum of penalties of jobs completed on time.
  * Total penalty = (Sum of all penalties) - (Sum of penalties of on-time jobs).
- * Minimizing total penalty is equivalent to maximizing saved penalty.
+ * Minimizing the total penalty is equivalent to maximizing saved penalty.
  */
 
 using std::vector;
