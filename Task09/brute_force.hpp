@@ -3,15 +3,10 @@
 
 #include <vector>
 #include "point.hpp"
+#include "clustering_common.hpp"
 
-using namespace std;
-
-struct ClusterResult {
-    vector<int> assignment;
-    double cost;
-};
-
-// brute force clustering
-ClusterResult solveBruteForce(const vector<Point>& points, int k);
+// Brute-force k-clustering: tries every possible assignment of n points to k clusters.
+// Guaranteed optimal but exponential time: O(k^n).
+ClusterResult solveBruteForce(const std::vector<Point>& points, int k);
 
 #endif
