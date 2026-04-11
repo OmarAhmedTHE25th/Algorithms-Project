@@ -16,10 +16,10 @@ int main() {
     // Create Solver object
     MinCutSolver solver(g);
 
-    cout << "\n Brute Force Result" << endl;
+    cout << "  Brute Force Result" << endl;
     cout << "Minimum Cut = " << solver.bruteForceMinCut() << endl;
 
-    cout << "\nIterative Improvement Result" << endl;
+    cout << " Iterative Improvement Result" << endl;
     cout << "Approximate Minimum Cut = "
         << solver.iterativeImprovement() << endl;
 
