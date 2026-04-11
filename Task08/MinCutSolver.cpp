@@ -1,6 +1,7 @@
 #include "MinCutSolver.h"
 #include <iostream>
 #include "Graph.h"
+#include <climits>
 
 MinCutSolver::MinCutSolver(Graph& g) : graph(g) {}
 
@@ -17,6 +18,64 @@ int MinCutSolver::calculateCut(const vector<int>& partition) {
     }
 
     return cutWeight;
+}
+
+int MinCutSolver::bruteForceMinCut() {
+    int n = graph.getVertices();
+    int minCut = INT_MAX;
+
+    // Generate all possible non-empty partitions
+    for (int mask = 1; mask < (1 << n) - 1; mask++) {
+        vector<int> partition(n);
+
+        // Convert bitmask to partition
+        for (int i = 0; i < n; i++) {
+            partition[i] = (mask >> i) & 1;
+        }
+
+        int currentCut = calculateCut(partition);
+
+        if (currentCut < minCut) {
+            minCut = currentCut;
+        }
+    }
+
+    return minCut;
+}
+
+int MinCutSolver::iterativeImprovement() {
+    int n = graph.getVertices();
+
+    // Initial partition: first half 0, second half 1
+    vector<int> partition(n);
+    for (int i = 0; i < n; i++) {
+        partition[i] = (i < n / 2) ? 0 : 1;
+    }
+
+    int bestCut = calculateCut(partition);
+    bool improved = true;
+
+    while (improved) {
+        improved = false;
+
+        for (int i = 0; i < n; i++) {
+            // Try flipping vertex i
+            partition[i] = 1 - partition[i];
+
+            int newCut = calculateCut(partition);
+
+            if (newCut < bestCut) {
+                bestCut = newCut;
+                improved = true;
+            }
+            else {
+                // Undo if no improvement
+                partition[i] = 1 - partition[i];
+            }
+        }
+    }
+
+    return bestCut;
 }
 
 void MinCutSolver::testCut() {

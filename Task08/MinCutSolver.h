@@ -16,6 +16,10 @@ public:
     // Calculate cut value for a partition
     int calculateCut(const vector<int>& partition);
 
+    int bruteForceMinCut();
+
+    int iterativeImprovement();
+
     // Test function
     void testCut();
 };
