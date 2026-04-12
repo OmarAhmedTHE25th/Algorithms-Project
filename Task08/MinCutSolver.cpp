@@ -59,9 +59,21 @@ int MinCutSolver::iterativeImprovement() {
         improved = false;
 
         for (int i = 0; i < n; i++) {
-            // Try flipping vertex i
-            partition[i] = 1 - partition[i];
+            // Count current sets
+            int count0 = 0, count1 = 0;
+            for (int x : partition) {
+                if (x == 0) count0++;
+                else count1++;
+            }
 
+            // Prevent empty set after move
+            if ((partition[i] == 0 && count0 == 1) ||
+                (partition[i] == 1 && count1 == 1)) {
+                continue;
+            }
+
+            // Try flipping
+            partition[i] = 1 - partition[i];
             int newCut = calculateCut(partition);
 
             if (newCut < bestCut) {
@@ -69,7 +81,7 @@ int MinCutSolver::iterativeImprovement() {
                 improved = true;
             }
             else {
-                // Undo if no improvement
+                // Undo bad move
                 partition[i] = 1 - partition[i];
             }
         }
