@@ -24,6 +24,7 @@ void printResult(const string& title, const ClusterResult& result, int k) {
 int main() {
     int n, k;
     cout << "========================================\n";
+<<<<<<< HEAD
     cout << "  Task 9 - K-Clustering  \n";
     cout << "========================================\n";
     cout << "Enter number of points: ";
@@ -36,6 +37,12 @@ int main() {
         return 1;
     }
 
+=======
+    cout << "  Task 9 - K-Clustering (CSE245 S2026)\n";
+    cout << "========================================\n";
+    cout << "Enter number of points: ";
+    cin >> n;
+>>>>>>> db2e2416a07011b873dce1f152ed81f8d85529fa
     cout << "Enter number of clusters k: ";
     cin >> k;
 
@@ -66,8 +73,11 @@ int main() {
     cout << "  Brute Force           : " << brRes.cost << "  (optimal)\n";
     cout << "  Divide and Conquer    : " << dcRes.cost << "\n";
     cout << "  Iterative Improvement : " << iiRes.cost << "\n";
+<<<<<<< HEAD
 
     cout << "\nPress Enter to exit...";
     cin.ignore(); cin.get();
+=======
+>>>>>>> db2e2416a07011b873dce1f152ed81f8d85529fa
     return 0;
 }

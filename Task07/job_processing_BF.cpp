@@ -50,7 +50,8 @@ void BFHelper(const std::vector<Job>& jobs,
                              Result& best){
     // Base case: all jobs are included in the current permutation
     if (current.size() == jobs.size()) {
-        if (const int totalPenalty = calculatePenalty(current); totalPenalty < best.totalPenalty)
+        const int totalPenalty = calculatePenalty(current);
+        if ( totalPenalty < best.totalPenalty)
         {
             best.totalPenalty = totalPenalty;
             best.bestOrder = current;
@@ -80,7 +81,7 @@ void BFHelper(const std::vector<Job>& jobs,
 Result optimizeJobScheduling(const vector<Job>& jobs) {
     Result best;
     std::vector<Job> current;
-    std::vector<bool> used(jobs.size(), false);
+    std::vector used(jobs.size(), false);
     BFHelper(jobs, current, used, best);
     return best;
 }

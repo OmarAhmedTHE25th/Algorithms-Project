@@ -170,32 +170,32 @@ void UpdateJobList() {
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
         case WM_CREATE: {
-            CreateWindowW(L"Static", L"ID:", WS_VISIBLE | WS_CHILD, 10, 10, 30, 20, hwnd, NULL, NULL, NULL);
-            hEditID = CreateWindowW(L"Edit", L"1", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_NUMBER, 45, 10, 50, 20, hwnd, (HMENU)ID_EDIT_ID, NULL, NULL);
+            CreateWindowW(L"Static", L"ID:", WS_VISIBLE | WS_CHILD, 10, 10, 30, 20, hwnd, nullptr, nullptr, nullptr);
+            hEditID = CreateWindowW(L"Edit", L"1", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_NUMBER, 45, 10, 50, 20, hwnd, (HMENU)ID_EDIT_ID, nullptr, nullptr);
             
-            CreateWindowW(L"Static", L"Time:", WS_VISIBLE | WS_CHILD, 105, 10, 40, 20, hwnd, NULL, NULL, NULL);
-            hEditTime = CreateWindowW(L"Edit", L"5", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_NUMBER, 150, 10, 50, 20, hwnd, (HMENU)ID_EDIT_TIME, NULL, NULL);
+            CreateWindowW(L"Static", L"Time:", WS_VISIBLE | WS_CHILD, 105, 10, 40, 20, hwnd, nullptr, nullptr, nullptr);
+            hEditTime = CreateWindowW(L"Edit", L"5", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_NUMBER, 150, 10, 50, 20, hwnd, (HMENU)ID_EDIT_TIME, nullptr, nullptr);
             
-            CreateWindowW(L"Static", L"Deadline:", WS_VISIBLE | WS_CHILD, 210, 10, 60, 20, hwnd, NULL, NULL, NULL);
-            hEditDeadline = CreateWindowW(L"Edit", L"10", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_NUMBER, 275, 10, 50, 20, hwnd, (HMENU)ID_EDIT_DEADLINE, NULL, NULL);
+            CreateWindowW(L"Static", L"Deadline:", WS_VISIBLE | WS_CHILD, 210, 10, 60, 20, hwnd, nullptr, nullptr, nullptr);
+            hEditDeadline = CreateWindowW(L"Edit", L"10", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_NUMBER, 275, 10, 50, 20, hwnd, (HMENU)ID_EDIT_DEADLINE, nullptr, nullptr);
             
-            CreateWindowW(L"Static", L"Penalty:", WS_VISIBLE | WS_CHILD, 335, 10, 55, 20, hwnd, NULL, NULL, NULL);
-            hEditPenalty = CreateWindowW(L"Edit", L"20", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_NUMBER, 395, 10, 50, 20, hwnd, (HMENU)ID_EDIT_PENALTY, NULL, NULL);
+            CreateWindowW(L"Static", L"Penalty:", WS_VISIBLE | WS_CHILD, 335, 10, 55, 20, hwnd, nullptr, nullptr, nullptr);
+            hEditPenalty = CreateWindowW(L"Edit", L"20", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_NUMBER, 395, 10, 50, 20, hwnd, (HMENU)ID_EDIT_PENALTY, nullptr, nullptr);
             
-            CreateWindowW(L"Button", L"Add Job", WS_VISIBLE | WS_CHILD, 455, 10, 80, 20, hwnd, (HMENU)ID_BTN_ADD, NULL, NULL);
-            CreateWindowW(L"Button", L"Clear", WS_VISIBLE | WS_CHILD, 545, 10, 80, 20, hwnd, (HMENU)ID_BTN_CLEAR, NULL, NULL);
+            CreateWindowW(L"Button", L"Add Job", WS_VISIBLE | WS_CHILD, 455, 10, 80, 20, hwnd, (HMENU)ID_BTN_ADD, nullptr, nullptr);
+            CreateWindowW(L"Button", L"Clear", WS_VISIBLE | WS_CHILD, 545, 10, 80, 20, hwnd, (HMENU)ID_BTN_CLEAR, nullptr, nullptr);
             
-            hListJobs = CreateWindowW(L"Edit", L"", WS_VISIBLE | WS_CHILD | WS_BORDER | WS_VSCROLL | ES_MULTILINE | ES_READONLY, 10, 40, 615, 100, hwnd, (HMENU)ID_LIST_JOBS, NULL, NULL);
+            hListJobs = CreateWindowW(L"Edit", L"", WS_VISIBLE | WS_CHILD | WS_BORDER | WS_VSCROLL | ES_MULTILINE | ES_READONLY, 10, 40, 615, 100, hwnd, (HMENU)ID_LIST_JOBS, nullptr, nullptr);
             
-            CreateWindowW(L"Button", L"Run All Algorithms", WS_VISIBLE | WS_CHILD, 10, 150, 615, 30, hwnd, (HMENU)ID_BTN_RUN, NULL, NULL);
+            CreateWindowW(L"Button", L"Run All Algorithms", WS_VISIBLE | WS_CHILD, 10, 150, 615, 30, hwnd, (HMENU)ID_BTN_RUN, nullptr, nullptr);
             
-            hTextResults = CreateWindowW(L"Edit", L"", WS_VISIBLE | WS_CHILD | WS_BORDER | WS_VSCROLL | ES_MULTILINE | ES_READONLY, 10, 190, 615, 250, hwnd, (HMENU)ID_TEXT_RESULTS, NULL, NULL);
+            hTextResults = CreateWindowW(L"Edit", L"", WS_VISIBLE | WS_CHILD | WS_BORDER | WS_VSCROLL | ES_MULTILINE | ES_READONLY, 10, 190, 615, 250, hwnd, (HMENU)ID_TEXT_RESULTS, nullptr, nullptr);
             break;
         }
         case WM_COMMAND: {
             if (LOWORD(wParam) == ID_BTN_ADD) {
                 WCHAR buf[32];
-                Job j;
+                Job j{};
                 GetWindowTextW(hEditID, buf, 32); j.id = _wtoi(buf);
                 GetWindowTextW(hEditTime, buf, 32); j.time = _wtoi(buf);
                 GetWindowTextW(hEditDeadline, buf, 32); j.deadline = _wtoi(buf);
@@ -256,16 +256,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wc.lpfnWndProc = WndProc;
     wc.hInstance = hInstance;
     wc.lpszClassName = CLASS_NAME;
-    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+    wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     
     RegisterClassW(&wc);
-    HWND hwnd = CreateWindowExW(0, CLASS_NAME, L"Job Scheduling Algorithms - GUI", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 650, 500, NULL, NULL, hInstance, NULL);
-    if (hwnd == NULL) return 0;
+    HWND hwnd = CreateWindowExW(0, CLASS_NAME, L"Job Scheduling Algorithms - GUI", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 650, 500, nullptr, nullptr, hInstance, nullptr);
+    if (hwnd == nullptr) return 0;
     ShowWindow(hwnd, nCmdShow);
     
     MSG msg = {};
-    while (GetMessage(&msg, NULL, 0, 0)) {
+    while (GetMessage(&msg, nullptr, 0, 0)) {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
