@@ -9,6 +9,7 @@
 
 using namespace std;
 
+// prints the clusters and the cost of one algorithm's result
 void printResult(const string& title, const ClusterResult& result, int k) {
     cout << "\n=== " << title << " ===\n";
     cout << fixed << setprecision(4);
@@ -24,9 +25,10 @@ void printResult(const string& title, const ClusterResult& result, int k) {
 int main() {
     int n, k;
     cout << "========================================\n";
-<<<<<<< HEAD
-    cout << "  Task 9 - K-Clustering  \n";
+    cout << "  Task 9 - K-Clustering (CSE245 S2026)\n";
     cout << "========================================\n";
+
+    // read input
     cout << "Enter number of points: ";
     cin >> n;
 
@@ -37,12 +39,6 @@ int main() {
         return 1;
     }
 
-=======
-    cout << "  Task 9 - K-Clustering (CSE245 S2026)\n";
-    cout << "========================================\n";
-    cout << "Enter number of points: ";
-    cin >> n;
->>>>>>> db2e2416a07011b873dce1f152ed81f8d85529fa
     cout << "Enter number of clusters k: ";
     cin >> k;
 
@@ -60,6 +56,7 @@ int main() {
         cin >> points[i].x >> points[i].y;
     }
 
+    // run all 3 algorithms
     ClusterResult brRes = solveBruteForce(points, k);
     ClusterResult dcRes = solveDivideAndConquer(points, k);
     ClusterResult iiRes = solveIterativeImprovement(points, k);
@@ -68,16 +65,14 @@ int main() {
     printResult("Divide and Conquer",    dcRes, k);
     printResult("Iterative Improvement", iiRes, k);
 
+    // compare costs (brute force is the baseline since it's optimal)
     cout << "\n--- Cost Comparison ---\n";
     cout << fixed << setprecision(4);
     cout << "  Brute Force           : " << brRes.cost << "  (optimal)\n";
     cout << "  Divide and Conquer    : " << dcRes.cost << "\n";
     cout << "  Iterative Improvement : " << iiRes.cost << "\n";
-<<<<<<< HEAD
 
     cout << "\nPress Enter to exit...";
     cin.ignore(); cin.get();
-=======
->>>>>>> db2e2416a07011b873dce1f152ed81f8d85529fa
     return 0;
 }
