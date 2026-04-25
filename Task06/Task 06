@@ -1,7 +1,136 @@
+// Task 6 - Lattice Path using Dynamic Programming
+
 #include <iostream>
 using namespace std;
 
+bool can_cover_lattice(int n) {
+    bool*** dp = new bool**[n];
+
+    for (int i = 0; i < n; i++) {
+        dp[i] = new bool*[n];
+        for (int j = 0; j < n; j++) {
+            dp[i][j] = new bool[2 * n - 1];
+            for (int k = 0; k < 2 * n - 1; k++) {
+                dp[i][j][k] = false;
+            }
+        }
+    }
+
+    dp[0][0][0] = true;
+
+    for (int k = 1; k < 2 * n - 1; k++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+
+                bool from_horizontal = false;
+                bool from_vertical = false;
+
+                if (i > 0)
+                    from_horizontal = dp[i - 1][j][k - 1];
+                else if (i == 0 && k == 1)
+                    from_horizontal = true;
+
+                if (j > 0)
+                    from_vertical = dp[i][j - 1][k - 1];
+                else if (j == 0 && k == 1)
+                    from_vertical = true;
+
+                dp[i][j][k] = from_horizontal || from_vertical;
+            }
+        }
+    }
+
+    bool result = dp[n - 1][n - 1][2 * n - 2];
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++)
+            delete[] dp[i][j];
+        delete[] dp[i];
+    }
+
+    delete[] dp;
+
+    return result;
+}
+
+void print_spaces(int count) {
+    for (int i = 0; i < count; i++)
+        cout << " ";
+}
+
+void visualize_path(int n) {
+    cout << "\nLattice Path Visualization:\n\n";
+
+    char** grid = new char*[n];
+
+    for (int i = 0; i < n; i++) {
+        grid[i] = new char[n];
+        for (int j = 0; j < n; j++)
+            grid[i][j] = '.';
+    }
+
+    grid[0][0] = '*';
+
+    int x = 0, y = 0;
+    bool going_right = true;
+
+    for (int i = 0; i < n; i++) {
+
+        if (going_right) {
+            for (int j = 1; j < n; j++) {
+                grid[i][j] = '>';
+                y = j;
+            }
+        } else {
+            for (int j = n - 2; j >= 0; j--) {
+                grid[i][j] = '<';
+                y = j;
+            }
+        }
+
+        if (i < n - 1) {
+            x = i + 1;
+            grid[x][y] = 'v';
+        }
+
+        going_right = !going_right;
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << grid[i][j];
+            print_spaces(3);
+        }
+        cout << endl;
+    }
+
+    for (int i = 0; i < n; i++)
+        delete[] grid[i];
+
+    delete[] grid;
+}
+
 int main() {
-    cout << "Task06 test commit";
+    int n;
+
+    cout << "Enter lattice size n (n > 2): ";
+    cin >> n;
+
+    if (n <= 2) {
+        cout << "Invalid input.\n";
+        return 0;
+    }
+
+    bool result = can_cover_lattice(n);
+
+    if (result) {
+        cout << "\nIt is possible to cross all points using "
+             << 2 * n - 2 << " lines.\n";
+
+        visualize_path(n);
+    } else {
+        cout << "\nIt is NOT possible.\n";
+    }
+
     return 0;
 }
