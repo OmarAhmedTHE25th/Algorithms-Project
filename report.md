@@ -45,7 +45,131 @@ _(Insert date)_
 # Task04 – _(Insert Description)_
 
 
-# Task05 – _(Insert Description)_
+# Task05 – _Shooting an Unseen Moving Target_
+## Task Description
+A computer game has a shooter and a moving target hiding in one of $n > 1$ hiding spots arranged on a straight line, indexed $1, 2, \dots, n$. The shooter never sees the target; the only known fact is that **between every two consecutive shots the target moves to an adjacent spot**. A shot kills the target if and only if it lands on the spot the target is currently at. The objective is to design a fixed sequence of shots (no feedback after each shot) that is **guaranteed to hit the target regardless of where it starts and how it moves**. The constraint is to design a Divide and Conquer algorithm; decrease and conquer is explicitly disallowed.
+
+## Underlying Assumptions
+1. Hiding spots are arranged on a 1D line and indexed by integers in $\{1, 2, \dots, n\}$.
+2. A "move to an adjacent spot" means $x \to x-1$ or $x \to x+1$. The target cannot leave $[1, n]$, so a target at spot $1$ must move to $2$ and a target at spot $n$ must move to $n-1$.
+3. The target moves exactly once after each shot that misses, and never between a shot and the same round's hit decision.
+4. The shooter has no memory of past hits or misses (no feedback). The full shot sequence is fixed in advance.
+5. The target may behave adversarially; it is allowed to pick whichever adjacent move best avoids future shots.
+
+## Solution
+### Divide and Conquer Method
+**Key invariant.** Every move flips the target's parity (an even-indexed spot becomes odd, and vice versa). The parity of the spot occupied at round $k$ is therefore determined entirely by the **initial parity** and the round number; the target's initial parity is a game-long invariant.
+
+**Divide.** Partition the set of all possible target trajectories into two disjoint sub-instances by initial parity:
+- $A$: trajectories whose starting spot is **even**.
+- $B$: trajectories whose starting spot is **odd**.
+
+**Conquer.** Each sub-instance is solved by a parity-locked sweep of contiguous indices.
+- Solving $A$: shoot $2, 3, 4, \dots, n-1$ in order. At round $k$ the shot is at spot $k+1$, whose parity equals the parity of an even-start target at round $k$. Bounded by the walls, the target cannot keep dodging forever and is hit somewhere in the sweep.
+- Solving $B$: shoot $n-1, n-2, \dots, 3, 2$ in order. By the same parity argument, every shot in this sweep is parity-aligned with an odd-start target.
+
+Each sweep itself is constructed recursively by halving the index range $[lo, hi]$ at $mid = \lfloor (lo+hi)/2 \rfloor$, recursing on the two halves, and concatenating in the desired direction. This is a clean binary divide and conquer structure rather than a decrease-and-conquer peel.
+
+**Combine.** Concatenate the two sweep sequences. The final strategy has length $2(n-2)$ for $n \geq 3$. The case $n = 2$ is a base case: two shots at the same spot suffice.
+
+#### Pseudocode
+```text
+Procedure BuildSweep(lo, hi, dir, out):
+    if lo > hi: return
+    if lo == hi:
+        append lo to out
+        return
+    mid = (lo + hi) / 2
+    if dir == +1:
+        BuildSweep(lo,    mid, +1, out)
+        BuildSweep(mid+1, hi,  +1, out)
+    else:
+        BuildSweep(mid+1, hi,  -1, out)
+        BuildSweep(lo,    mid, -1, out)
+
+Procedure GenerateShots(n):
+    shots = []
+    if n == 2: return [2, 2]
+    BuildSweep(2, n-1, +1, shots)   // sub-instance A: even-start targets
+    BuildSweep(2, n-1, -1, shots)   // sub-instance B: odd-start targets
+    return shots
+```
+
+#### Implementation Code
+```cpp
+static void buildSweep(const int lo, const int hi, const int dir, vector<int>& out)
+{
+    if (lo > hi) return;
+    if (lo == hi) { out.push_back(lo); return; }
+    const int mid = lo + (hi - lo) / 2;
+    if (dir > 0) {
+        buildSweep(lo,      mid, dir, out);
+        buildSweep(mid + 1, hi,  dir, out);
+    } else {
+        buildSweep(mid + 1, hi,  dir, out);
+        buildSweep(lo,      mid, dir, out);
+    }
+}
+
+vector<int> generateShots(const int n)
+{
+    vector<int> shots;
+    if (n == 2) {
+        shots.push_back(2);
+        shots.push_back(2);
+        return shots;
+    }
+    buildSweep(2, n - 1, +1, shots);
+    buildSweep(2, n - 1, -1, shots);
+    return shots;
+}
+```
+
+#### Step By Step Description
+1. Identify the parity invariant: every move flips parity, so initial parity is fixed for the entire game.
+2. Divide all possible target behaviours into two disjoint sub-instances by initial parity.
+3. For the even-start sub-instance build a forward sweep over $[2, n-1]$ by recursive halving so that every shot's parity matches the target's current parity.
+4. For the odd-start sub-instance build the analogous backward sweep over $[n-1, 2]$.
+5. Concatenate both sweeps. The combined sequence is guaranteed to hit the target regardless of its starting position or movement choices.
+
+#### Time and Space Complexity Analysis
+- **Time complexity (sequence generation):** $T(k) = 2T(k/2) + O(1)$, which solves to $T(k) = O(k)$ by the Master Theorem. Building two sweeps over $n-2$ indices is $O(n)$.
+- **Number of shots produced:** $2(n-2)$ for $n \geq 3$ and $2$ for $n = 2$.
+- **Space complexity:** $O(n)$ for the output sequence and $O(\log n)$ for the recursion stack.
+
+#### Adversarial Verification
+The strategy is checked by maintaining the set $L_k$ of positions the target could possibly occupy at round $k$. Starting from $L_1 = \{1, \dots, n\}$, after each shot at $s_k$ we set $L_k \leftarrow L_k \setminus \{s_k\}$ and then propagate $L_{k+1} = \{p \pm 1 : p \in L_k\} \cap [1, n]$. The strategy is correct iff $L_k$ becomes empty before the sequence ends. This check runs in $O(n^2)$ in the worst case.
+
+#### Sample Outputs
+
+| $n$ | Shot sequence            | Length | Verified |
+|-----|--------------------------|--------|----------|
+| 2   | 2 2                      | 2      | OK       |
+| 3   | 2 2                      | 2      | OK       |
+| 4   | 2 3 3 2                  | 4      | OK       |
+| 5   | 2 3 4 4 3 2              | 6      | OK       |
+| 6   | 2 3 4 5 5 4 3 2          | 8      | OK       |
+| 7   | 2 3 4 5 6 6 5 4 3 2      | 10     | OK       |
+
+Adversarial trace for $n = 4$ with shots $[2, 3, 3, 2]$:
+
+```
+round 1  shoot 2  survivors {1,3,4}  -> after move {2,3,4}
+round 2  shoot 3  survivors {2,4}    -> after move {1,3}
+round 3  shoot 3  survivors {1}      -> after move {2}
+round 4  shoot 2  survivors {}       -> target eliminated
+```
+
+## Extended Analysis & Alternative techniques
+- **Lower bound.** Any guaranteed-hit strategy needs at least $2(n-2)$ shots for $n \geq 3$, since the shooter must dispose of both parity classes (each of size roughly $n/2$) with no information leak between them. The strategy above is therefore asymptotically optimal.
+- **Decrease and conquer.** The same sweep $2, 3, \dots, n-1, n-1, \dots, 3, 2$ can also be derived by repeatedly peeling off endpoints (a decrease-and-conquer formulation), but the task forbids this. The recursive halving in `BuildSweep` is the genuine binary D&C alternative.
+- **Randomised shooter.** A purely random shot at each round eventually hits the target, but with no finite worst-case bound. The deterministic D&C strategy is strictly stronger.
+
+## Key Findings and Insights
+1. The parity-flip invariant is the structural property that makes the problem tractable; it splits the search space into two independent sub-instances.
+2. A contiguous index range admits a clean halving recursion of depth $O(\log n)$ where each leaf contributes one shot, yielding exactly $n - 2$ shots per subproblem.
+3. The adversarial set-propagation verifier is a generic and reusable correctness check for any candidate strategy in this family of pursuit problems.
+
 
 
 # Task06 – _(Insert Description)_
