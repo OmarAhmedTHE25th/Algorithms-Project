@@ -20,6 +20,8 @@ public:
 
     int iterativeImprovement();
 
+    int greedyMinCut();
+
     // Test function
     void testCut();
 };

@@ -24,7 +24,8 @@ int main() {
         cout << "1. Display Graph" << endl;
         cout << "2. Brute Force Minimum Cut" << endl;
         cout << "3. Iterative Improvement" << endl;
-        cout << "4. Exit" << endl;
+        cout << "4. Greedy " << endl;
+        cout << "5. Exit " << endl;
         cout << "Choose: ";
         cin >> choice;
 
@@ -46,6 +47,12 @@ int main() {
             break;
 
         case 4:
+            cout << "\nGreedy Algorithm Result" << endl;
+            cout << "Greedy Cut = "
+                << solver.greedyMinCut() << endl;
+            break;
+
+        case 5:
             cout << "Exiting program..." << endl;
             break;
 
@@ -53,7 +60,7 @@ int main() {
             cout << "Invalid choice!" << endl;
         }
 
-    } while (choice != 4);
+    } while (choice != 5);
 
     return 0;
 }
