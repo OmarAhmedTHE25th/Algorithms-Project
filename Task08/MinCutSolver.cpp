@@ -111,22 +111,22 @@ int MinCutSolver::greedyMinCut() {
 
     for (int i = 1; i < n; i++) {
 
-        // جرب group 0
+        // 
         partition[i] = 0;
         int cost0 = calculateCut(partition);
 
-        // جرب group 1
+        // 
         partition[i] = 1;
         int cost1 = calculateCut(partition);
 
-        // اختار الأفضل
+        //
         if (cost0 < cost1)
             partition[i] = 0;
         else
             partition[i] = 1;
     }
 
-    // 🔥 تأكد إن في مجموعتين
+   
     bool has0 = false, has1 = false;
 
     for (int x : partition) {
@@ -134,7 +134,7 @@ int MinCutSolver::greedyMinCut() {
         if (x == 1) has1 = true;
     }
 
-    // لو كلهم في نفس الجروب → عدل آخر نود
+    //
     if (!has0 || !has1) {
         partition[n - 1] = 1 - partition[n - 1];
     }
