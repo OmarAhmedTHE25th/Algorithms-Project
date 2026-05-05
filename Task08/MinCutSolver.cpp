@@ -71,8 +71,6 @@ int MinCutSolver::iterativeImprovement() {
                 (partition[i] == 1 && count1 == 1)) {
                 continue;
             }
-
-            // Try flipping
             partition[i] = 1 - partition[i];
             int newCut = calculateCut(partition);
 
@@ -81,7 +79,7 @@ int MinCutSolver::iterativeImprovement() {
                 improved = true;
             }
             else {
-                // Undo bad move
+                // Undo bad moveeee
                 partition[i] = 1 - partition[i];
             }
         }
