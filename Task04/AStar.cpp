@@ -52,7 +52,7 @@ int main() {
     parent[start] = "DONE";
     cost[start] = 0;
 
-    cout << "Iterative Improvement (A* Pathfinding Strategy)\n\n";
+    cout << "(A* Pathfinding Strategy)\n\n";
 
     while (!pq.empty()) {
         State cur = pq.top();
