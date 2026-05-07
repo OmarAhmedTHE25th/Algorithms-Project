@@ -39,7 +39,192 @@ _(Insert date)_
 # Task02 – _(Insert Description)_
 
 
-# Task03 – _(Insert Description)_
+# Task03 – Tower of Hanoi with Four Pegs (Frame-Stewart)
+## Task Description
+There are eight disks of different sizes and four pegs. Initially, all disks are stacked on the first peg in order of size, with the largest on the bottom and the smallest on top. The objective is to transfer all disks to another peg using a sequence of moves, where only one disk may be moved at a time and it is forbidden to place a larger disk on top of a smaller one.
+ 
+The task asks whether a Dynamic Programming algorithm can solve this puzzle in 33 moves for $n = 8$ disks. If not, an algorithm that achieves 33 moves must be designed. Additionally, a general Dynamic Programming algorithm must be designed to solve the four-peg puzzle for any number of disks.
+ 
+## Underlying Assumptions
+1. Only one disk may be moved per step.
+2. A larger disk may never be placed on top of a smaller disk.
+3. Any peg may serve as a temporary auxiliary at any point.
+4. The four-peg variant strictly generalises the classic three-peg problem; three-peg Hanoi is used as a sub-routine within the four-peg solution.
+5. The Frame-Stewart conjecture is assumed to give the optimal move count (it has been verified for small $n$ including $n = 8$).
+## Solution
+ 
+### Divide and Conquer Method
+The classic three-peg Tower of Hanoi is solved by divide and conquer. To move $n$ disks from the source peg to the destination peg using one auxiliary peg:
+ 
+1. Recursively move the top $n-1$ disks from source to auxiliary.
+2. Move the largest disk from source to destination.
+3. Recursively move $n-1$ disks from auxiliary to destination.
+This yields the recurrence $T(n) = 2T(n-1) + 1$, which solves to $T(n) = 2^n - 1$. For $n = 8$ disks this gives $2^8 - 1 = 255$ moves.
+ 
+#### Pseudocode
+```text
+Procedure Hanoi3Peg(n, source, destination, aux):
+    if n == 0: return
+    Hanoi3Peg(n-1, source, aux, destination)
+    move disk n from source to destination
+    Hanoi3Peg(n-1, aux, destination, source)
+```
+ 
+#### Implementation Code
+```cpp
+void hanoi3Peg(int n, char source, char destination, char aux)
+{
+    if (n == 0)
+        return;
+ 
+    hanoi3Peg(n - 1, source, aux, destination);
+    cout << "Move disk " << n << " from Peg " << source << " to Peg " << destination << "\n";
+    totalMoves++;
+    hanoi3Peg(n - 1, aux, destination, source);
+}
+```
+ 
+#### Step By Step Description
+1. If there is only one disk, move it directly from source to destination.
+2. Recursively move the top $n-1$ disks out of the way onto the auxiliary peg.
+3. Move the bottom (largest) disk to the destination peg.
+4. Recursively move the $n-1$ disks from the auxiliary peg onto the destination peg.
+#### Time and Space Complexity Analysis
+- **Time Complexity:** $O(2^n)$ — the recurrence $T(n) = 2T(n-1) + 1$ solves to $2^n - 1$.
+- **Space Complexity:** $O(n)$ for the recursion stack depth.
+---
+ 
+### Dynamic Programming Method (Frame-Stewart Algorithm)
+The fourth peg is exploited by the Frame-Stewart algorithm. To move $n$ disks using four pegs, choose a split parameter $k$ ($1 \leq k < n$):
+ 
+1. Use all four pegs to move the top $k$ disks to an auxiliary peg.
+2. Use three pegs (ignoring the peg holding the $k$ disks) to move the remaining $n - k$ disks to the destination — this costs $2^{n-k} - 1$ moves.
+3. Use all four pegs to move the $k$ disks from the auxiliary onto the destination.
+The total cost for a given $k$ is $2 \cdot dp[k] + (2^{n-k} - 1)$. The DP table selects the $k$ that minimises this:
+ 
+$$dp[n] = \min_{1 \leq k < n} \left( 2 \cdot dp[k] + 2^{n-k} - 1 \right)$$
+ 
+with base cases $dp[0] = 0$ and $dp[1] = 1$.
+ 
+#### Pseudocode
+```text
+Procedure BuildDPTable(maxDisks):
+    dp[0] = 0
+    dp[1] = 1
+    bestSplit[0] = 0
+    bestSplit[1] = 0
+ 
+    for n from 2 to maxDisks:
+        dp[n] = INFINITY
+        for k from 1 to n-1:
+            cost = 2 * dp[k] + (2^(n-k) - 1)
+            if cost < dp[n]:
+                dp[n] = cost
+                bestSplit[n] = k
+ 
+Procedure Hanoi4Peg(n, source, destination, aux1, aux2):
+    if n == 0: return
+    if n == 1:
+        move disk 1 from source to destination
+        return
+    k = bestSplit[n]
+    Hanoi4Peg(k,   source, aux1,        destination, aux2)
+    Hanoi3Peg(n-k, source, destination, aux2)
+    Hanoi4Peg(k,   aux1,   destination, source,      aux2)
+```
+ 
+#### Implementation Code
+```cpp
+void buildDPTable(int maxDisks)
+{
+    dp[0] = 0;
+    dp[1] = 1;
+    bestSplit[0] = 0;
+    bestSplit[1] = 0;
+ 
+    for (int n = 2; n <= maxDisks; n++)
+    {
+        dp[n] = INT_MAX;
+ 
+        for (int k = 1; k < n; k++)
+        {
+            int cost = 2 * dp[k] + ((1 << (n - k)) - 1);
+ 
+            if (cost < dp[n])
+            {
+                dp[n]        = cost;
+                bestSplit[n] = k;
+            }
+        }
+    }
+}
+ 
+void hanoi4Peg(int n, char source, char destination, char aux1, char aux2)
+{
+    if (n == 0)
+        return;
+ 
+    if (n == 1)
+    {
+        cout << "Move disk 1 from Peg " << source << " to Peg " << destination << "\n";
+        totalMoves++;
+        return;
+    }
+ 
+    int k = bestSplit[n];
+ 
+    hanoi4Peg(k, source, aux1, destination, aux2);
+    hanoi3Peg(n - k, source, destination, aux2);
+    hanoi4Peg(k, aux1, destination, source, aux2);
+}
+```
+ 
+#### Step By Step Description
+1. Build the DP table by evaluating every possible split $k$ for each disk count from 2 up to $n$.
+2. Store the optimal split $k$ in `bestSplit[n]` for use during the actual move sequence.
+3. To execute the four-peg solution for $n$ disks, retrieve $k = \text{bestSplit}[n]$.
+4. Recursively move the top $k$ disks to a spare peg using all four pegs.
+5. Move the remaining $n - k$ disks to the destination using only three pegs (classic Hanoi).
+6. Recursively move the $k$ disks from the spare peg to the destination using all four pegs.
+#### Time and Space Complexity Analysis
+- **Time Complexity (table construction):** $O(n^2)$ — two nested loops each of size $n$.
+- **Time Complexity (move execution):** $O(dp[n])$, i.e. proportional to the number of moves produced, which is $O(n^{1.5})$ empirically under the Frame-Stewart formula.
+- **Space Complexity:** $O(n)$ for the `dp` and `bestSplit` arrays, plus $O(n)$ recursion depth.
+#### DP Table Output ($n = 8$)
+ 
+| Disks | Best $k$ | Min Moves |
+|-------|----------|-----------|
+| 1     | 0        | 1         |
+| 2     | 1        | 3         |
+| 3     | 1        | 5         |
+| 4     | 1        | 9         |
+| 5     | 2        | 13        |
+| 6     | 3        | 17        |
+| 7     | 3        | 25        |
+| 8     | 4        | 33        |
+ 
+The DP confirms that 8 disks can be transferred in **33 moves** using 4 pegs — compared to the 255 moves required by the classic three-peg divide and conquer approach.
+ 
+## Comparative Evaluation
+ 
+| Feature            | 3-Peg Divide & Conquer     | 4-Peg Dynamic Programming (Frame-Stewart) |
+|:-------------------|:---------------------------|:------------------------------------------|
+| **Optimality**     | Optimal for 3 pegs         | Conjectured optimal for 4 pegs            |
+| **Move Count**     | $2^n - 1$                  | $O(n^{1.5})$ empirically                  |
+| **For $n = 8$**    | 255 moves                  | 33 moves                                  |
+| **Approach**       | Pure recursion             | DP table + recursive execution            |
+| **Time Complexity**| $O(2^n)$                   | $O(n^2)$ build + $O(dp[n])$ execution     |
+| **Generality**     | Any $n$, fixed 3 pegs      | Any $n$, generalises to $p$ pegs          |
+ 
+## Extended Analysis & Alternative Techniques
+- **Frame-Stewart conjecture:** The algorithm is conjectured to be optimal for four pegs, and has been verified computationally for all $n \leq 30$, including $n = 8$.
+- **Generalisation to $p$ pegs:** The same DP structure extends to any number of pegs $p \geq 3$. Adding more pegs reduces the move count further; the benefit diminishes as $p$ grows.
+- **Three-peg as a sub-routine:** The four-peg solution deliberately falls back to three-peg Hanoi for the middle $n - k$ disks, showing how divide and conquer and dynamic programming compose naturally.
+## Key Findings and Insights
+1. The fourth peg enables a dramatic reduction from $2^n - 1$ moves to approximately $O(n^{1.5})$ moves, which for $n = 8$ is a reduction from 255 to 33 — a factor of almost 8.
+2. The optimal split $k$ is not simply $\lfloor n/2 \rfloor$; it is determined by the DP minimisation and shifts as $n$ grows, highlighting that greedy or symmetric splits are suboptimal.
+3. Combining classic divide and conquer (three-peg recursion) as a sub-routine inside a DP framework demonstrates that the two paradigms are complementary rather than competing.
+
 
 
 # Task04 – _(Insert Description)_
