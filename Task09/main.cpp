@@ -9,7 +9,6 @@
 
 using namespace std;
 
-// prints the clusters and the cost of one algorithm's result
 void printResult(const string& title, const ClusterResult& result, int k) {
     cout << "\n=== " << title << " ===\n";
     cout << fixed << setprecision(4);
@@ -28,7 +27,6 @@ int main() {
     cout << "  Task 9 - K-Clustering\n";
     cout << "========================================\n";
 
-    // read input
     cout << "Enter number of points: ";
     cin >> n;
 
@@ -56,7 +54,6 @@ int main() {
         cin >> points[i].x >> points[i].y;
     }
 
-    // run all 3 algorithms
     ClusterResult brRes = solveBruteForce(points, k);
     ClusterResult dcRes = solveDivideAndConquer(points, k);
     ClusterResult iiRes = solveIterativeImprovement(points, k);
@@ -65,7 +62,6 @@ int main() {
     printResult("Divide and Conquer",    dcRes, k);
     printResult("Iterative Improvement", iiRes, k);
 
-    // compare costs (brute force is the baseline since it's optimal)
     cout << "\n--- Cost Comparison ---\n";
     cout << fixed << setprecision(4);
     cout << "  Brute Force           : " << brRes.cost << "  (optimal)\n";

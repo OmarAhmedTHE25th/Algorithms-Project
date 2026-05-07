@@ -1,17 +1,25 @@
 #include "iterative_improvement.hpp"
-#include <algorithm>
-#include <limits>
-#include <cmath>
-#include <cstdlib>
-#include <ctime>
 using namespace std;
+
+static const double INF = 1e18;
+
+static unsigned long randState = 1;
+static const int MY_RAND_MAX = 32767;
+
+static int myRand() {
+    randState = randState * 214013UL + 2531011UL;
+    return (int)((randState >> 16) & 0x7FFF);
+}
+
+static void mySrand(unsigned long s) {
+    randState = s;
+}
 
 static double dist2(const Point& a, const Point& b) {
     double dx = a.x - b.x, dy = a.y - b.y;
     return dx * dx + dy * dy;
 }
 
-// update centers based on current assignments, returns false if any cluster is empty
 static bool computeCentroids(const vector<Point>& pts,
                               const vector<int>&   asgn,
                               int k,
@@ -30,14 +38,13 @@ static bool computeCentroids(const vector<Point>& pts,
     return true;
 }
 
-// put each point in its nearest cluster, returns true if anything moved
 static bool assignNearest(const vector<Point>& pts,
                            const vector<Point>& centers,
                            vector<int>&         asgn) {
     int k = (int)centers.size();
     bool changed = false;
     for (int i = 0; i < (int)pts.size(); i++) {
-        double best = numeric_limits<double>::max();
+        double best = INF;
         int    bestC = 0;
         for (int c = 0; c < k; c++) {
             double d = dist2(pts[i], centers[c]);
@@ -57,21 +64,18 @@ static double totalCost(const vector<Point>& pts,
     return cost;
 }
 
-// k-means++ seeding: picks starting centers that are spread out
 static vector<Point> kMeansPlusPlusInit(const vector<Point>& pts, int k) {
     int n = (int)pts.size();
     vector<Point> centers;
     centers.reserve(k);
 
-    // first center picked randomly
-    centers.push_back(pts[rand() % n]);
+    centers.push_back(pts[myRand() % n]);
 
     vector<double> d2(n);
     for (int step = 1; step < k; step++) {
-        // find distance from each point to its nearest existing center
         double sum = 0;
         for (int i = 0; i < n; i++) {
-            double best = numeric_limits<double>::max();
+            double best = INF;
             for (const Point& c : centers) {
                 double d = dist2(pts[i], c);
                 if (d < best) best = d;
@@ -79,8 +83,7 @@ static vector<Point> kMeansPlusPlusInit(const vector<Point>& pts, int k) {
             d2[i] = best;
             sum += best;
         }
-        // farther points are more likely to be chosen as the next center
-        double threshold = ((double)rand() / RAND_MAX) * sum;
+        double threshold = ((double)myRand() / MY_RAND_MAX) * sum;
         double cumul = 0;
         int chosen = n - 1;
         for (int i = 0; i < n; i++) {
@@ -92,20 +95,19 @@ static vector<Point> kMeansPlusPlusInit(const vector<Point>& pts, int k) {
     return centers;
 }
 
-// one full k-means run until it converges
 static ClusterResult kMeansRun(const vector<Point>& pts, int k) {
     int n = (int)pts.size();
     ClusterResult res;
     res.assignment.assign(n, 0);
-    res.cost = numeric_limits<double>::max();
+    res.cost = INF;
 
     vector<Point> centers = kMeansPlusPlusInit(pts, k);
     assignNearest(pts, centers, res.assignment);
 
     const int MAX_ITER = 300;
     for (int iter = 0; iter < MAX_ITER; iter++) {
-        if (!computeCentroids(pts, res.assignment, k, centers)) break; // empty cluster
-        if (!assignNearest(pts, centers, res.assignment)) break;       // converged
+        if (!computeCentroids(pts, res.assignment, k, centers)) break;
+        if (!assignNearest(pts, centers, res.assignment)) break;
     }
 
     computeCentroids(pts, res.assignment, k, centers);
@@ -116,13 +118,12 @@ static ClusterResult kMeansRun(const vector<Point>& pts, int k) {
 ClusterResult solveIterativeImprovement(const vector<Point>& points, int k) {
     ClusterResult best;
     best.assignment = vector<int>(points.size(), 0);
-    best.cost = numeric_limits<double>::max();
+    best.cost = INF;
 
     if (k <= 0 || k > (int)points.size()) return best;
 
-    srand(42); // fixed seed so results are the same every run
+    mySrand(42);
 
-    // try several times with different seeds and keep the best one
     const int RESTARTS = 10;
     for (int r = 0; r < RESTARTS; r++) {
         ClusterResult res = kMeansRun(points, k);

@@ -1,14 +1,14 @@
 #include "brute_force.hpp"
-#include <limits>
 #include <vector>
 using namespace std;
+
+static const double INF = 1e18;
 
 double distanceSquared(const Point& a, const Point& b) {
     double dx = a.x - b.x, dy = a.y - b.y;
     return dx * dx + dy * dy;
 }
 
-// average of all points that belong to cluster c
 static Point centroid(const vector<Point>& pts, const vector<int>& asgn, int c) {
     double sx = 0, sy = 0;
     int cnt = 0;
@@ -26,9 +26,8 @@ static bool allNonEmpty(const vector<int>& asgn, int k) {
     return true;
 }
 
-// sum of squared distances from each point to its cluster center
 static double totalCost(const vector<Point>& pts, const vector<int>& asgn, int k) {
-    if (!allNonEmpty(asgn, k)) return 1e18; // skip solutions with empty clusters
+    if (!allNonEmpty(asgn, k)) return INF;
     vector<Point> centers(k);
     for (int c = 0; c < k; c++) centers[c] = centroid(pts, asgn, c);
     double cost = 0;
@@ -37,7 +36,6 @@ static double totalCost(const vector<Point>& pts, const vector<int>& asgn, int k
     return cost;
 }
 
-// try every possible assignment recursively and keep the best
 static void dfs(const vector<Point>& pts, int k, int idx,
                 vector<int>& cur, ClusterResult& best) {
     if (idx == (int)pts.size()) {
@@ -54,7 +52,7 @@ static void dfs(const vector<Point>& pts, int k, int idx,
 ClusterResult solveBruteForce(const vector<Point>& points, int k) {
     ClusterResult res;
     res.assignment = vector<int>(points.size(), -1);
-    res.cost = numeric_limits<double>::max();
+    res.cost = INF;
     if (k <= 0 || k > (int)points.size()) return res;
 
     vector<int> cur(points.size(), 0);

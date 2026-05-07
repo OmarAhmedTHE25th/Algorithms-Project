@@ -1,12 +1,35 @@
 #include "divide_and_conquer.hpp"
-#include <algorithm>
-#include <limits>
-#include <cmath>
 using namespace std;
+
+static const double INF = 1e18;
 
 static double dist2(const Point& a, const Point& b) {
     double dx = a.x - b.x, dy = a.y - b.y;
     return dx * dx + dy * dy;
+}
+
+static bool pointLess(const Point& a, const Point& b) {
+    if (a.x != b.x) return a.x < b.x;
+    return a.y < b.y;
+}
+
+static void mergeSortIndices(vector<int>& idx, int lo, int hi, const vector<Point>& pts) {
+    if (hi - lo <= 1) return;
+    int mid = (lo + hi) / 2;
+    mergeSortIndices(idx, lo, mid, pts);
+    mergeSortIndices(idx, mid, hi, pts);
+
+    vector<int> tmp;
+    tmp.reserve(hi - lo);
+    int i = lo, j = mid;
+    while (i < mid && j < hi) {
+        if (pointLess(pts[idx[i]], pts[idx[j]])) tmp.push_back(idx[i++]);
+        else                                     tmp.push_back(idx[j++]);
+    }
+    while (i < mid) tmp.push_back(idx[i++]);
+    while (j < hi)  tmp.push_back(idx[j++]);
+
+    for (int k = 0; k < (int)tmp.size(); k++) idx[lo + k] = tmp[k];
 }
 
 static vector<Point> computeCentroids(const vector<Point>& pts,
@@ -29,7 +52,7 @@ static vector<int> assignToNearest(const vector<Point>& pts,
     int k = (int)centers.size();
     vector<int> asgn(pts.size());
     for (int i = 0; i < (int)pts.size(); i++) {
-        double best = numeric_limits<double>::max();
+        double best = INF;
         int bestC = 0;
         for (int c = 0; c < k; c++) {
             double d = dist2(pts[i], centers[c]);
@@ -49,7 +72,6 @@ static double totalCost(const vector<Point>& pts,
     return cost;
 }
 
-// recursive helper: splits points in half and recurses
 static void dcHelper(const vector<Point>& pts,
                      vector<int> indices,
                      int k,
@@ -58,7 +80,6 @@ static void dcHelper(const vector<Point>& pts,
 
     int n = (int)indices.size();
 
-    // base case: 1 cluster or too few points
     if (k == 1 || n <= k) {
         if (n <= k)
             for (int i = 0; i < n; i++)
@@ -69,11 +90,7 @@ static void dcHelper(const vector<Point>& pts,
         return;
     }
 
-    // sort points by x (then y for ties) so we can split by median
-    sort(indices.begin(), indices.end(), [&](int a, int b) {
-        return pts[a].x < pts[b].x ||
-               (pts[a].x == pts[b].x && pts[a].y < pts[b].y);
-    });
+    mergeSortIndices(indices, 0, (int)indices.size(), pts);
 
     int mid   = n / 2;
     int kLeft  = k / 2;
@@ -90,16 +107,14 @@ ClusterResult solveDivideAndConquer(const vector<Point>& points, int k) {
     ClusterResult res;
     int n = (int)points.size();
     res.assignment = vector<int>(n, 0);
-    res.cost = numeric_limits<double>::max();
+    res.cost = INF;
 
     if (k <= 0 || k > n) return res;
 
-    // step 1: initial split using divide and conquer
     vector<int> indices(n);
     for (int i = 0; i < n; i++) indices[i] = i;
     dcHelper(points, indices, k, 0, res.assignment);
 
-    // step 2: refine with k-means to fix wrong assignments near the boundaries
     const int MAX_ITER = 100;
     for (int iter = 0; iter < MAX_ITER; iter++) {
         vector<Point> centers = computeCentroids(points, res.assignment, k);
@@ -110,10 +125,9 @@ ClusterResult solveDivideAndConquer(const vector<Point>& points, int k) {
             if (newAsgn[i] != res.assignment[i]) { changed = true; break; }
 
         res.assignment = newAsgn;
-        if (!changed) break; // nothing changed, done
+        if (!changed) break;
     }
 
-    // step 3: final cost
     vector<Point> centers = computeCentroids(points, res.assignment, k);
     res.cost = totalCost(points, res.assignment, centers);
 
