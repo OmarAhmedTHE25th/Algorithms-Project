@@ -1,6 +1,5 @@
 #include <iostream>
 #include <climits>
-#include <cmath>
 using namespace std;
 
 int dp[100];
@@ -18,10 +17,11 @@ void hanoi3Peg(int n, char source, char destination, char aux)
     hanoi3Peg(n - 1, aux, destination, source);
 }
 
-void buildDPTable(int maxDisks)\
+void buildDPTable(int maxDisks)
 {
     dp[0] = 0;
     dp[1] = 1;
+    bestSplit[0] = 0;
     bestSplit[1] = 0;
 
     for (int n = 2; n <= maxDisks; n++)
@@ -30,7 +30,7 @@ void buildDPTable(int maxDisks)\
 
         for (int k = 1; k < n; k++)
         {
-            int cost = 2 * dp[k] + (int)(pow(2, n - k) - 1);
+            int cost = 2 * dp[k] + ((1 << (n - k)) - 1);
 
             if (cost < dp[n])
             {
@@ -94,7 +94,7 @@ int main()
     cout << "Total moves: " << totalMoves << "\n";
 
     cout << "\n--- Comparison (n = 8) ---\n";
-    cout << "3-Peg D&C  : " << (int)(pow(2, N) - 1) << " moves\n";
+    cout << "3-Peg D&C  : " << ((1 << N) - 1) << " moves\n";
     cout << "4-Peg DP   : " << dp[N] << " moves\n";
 
     return 0;
